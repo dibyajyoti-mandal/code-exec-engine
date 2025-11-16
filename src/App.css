@@ -1,0 +1,29 @@
+#root {
+  display: flex;
+  justify-content: center;
+  padding: 80px 24px;
+}
+
+.app {
+  width: 100%;
+  max-width: 960px;
+  background: linear-gradient(180deg, #ffffff 0%, #f4f6fb 100%);
+  border-radius: 16px;
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  padding: 40px 48px;
+  text-align: left;
+}
+
+.app h1 {
+  margin: 0;
+  font-size: 48px;
+  color: #111827;
+}
+
+.app p {
+  margin-top: 12px;
+  font-size: 20px;
+  color: #4b5563;
+}
