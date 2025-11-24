@@ -23,27 +23,6 @@ var mu sync.Mutex
 // Fake job queue
 var jobQueue = make(chan Job, constants.JQCHANNEL)
 
-func enqueueTestJobs() {
-	jobs := []Job{
-		{Language: "python", Code: `print("Hello 1")`},
-		{Language: "python", Code: `print("Hello 2")`},
-		{Language: "cpp", Code: `
-#include <iostream>
-using namespace std;
-int main(){
-int n = 4;
-for(int i=1; i<=n; i++){
-	cout<<i<<" ";
-}cout<<endl;
-
-}`},
-	}
-
-	for _, j := range jobs {
-		jobQueue <- j
-	}
-}
-
 func workerLoop(workerID int) {
 	fmt.Println("[Worker", workerID, "] started")
 

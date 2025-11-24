@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
-echo "$CODE" > code.js
+# Write Python code to file
+echo "$CODE" > code.py
 
-timeout 3 node code.js
+# Run with a 3-second time limit
+timeout 3 python3 code.py

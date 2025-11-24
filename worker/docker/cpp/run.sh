@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Write the incoming code to a file
+# Write incoming code to a file
 echo "$CODE" > code.cpp
 
 # Compile the C++ program
@@ -11,5 +11,5 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Run the compiled program
-./code.out
+# Run with 1-second time limit
+timeout 1 ./code.out
