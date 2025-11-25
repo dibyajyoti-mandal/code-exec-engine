@@ -1,7 +1,9 @@
 package main
 
-func enqueueTestJobs() {
-	jobs := []Job{
+import "github.com/dibyajyoti-mandal/code-exec-engine/models"
+
+func EnqueueTestJobs() {
+	jobs := []models.Job{
 		{Language: "python", Code: `print("Hello 1")`},
 		{Language: "python", Code: `print("Hello 2")`},
 		{Language: "cpp", Code: `
@@ -14,17 +16,18 @@ for(int i=1; i<=n; i++){
 }cout<<endl;
 
 }`},
-		{Language: "python",
+		{
+			Language: "python",
 			Code: `
-		while True:
-		    pass
-		`,
+while True:
+    pass
+`,
 		},
 		{
 			Language: "python",
 			Code: `
 import time
-time.sleep(3.5)
+time.sleep(2.5)
 print("Done sleeping")
 `,
 		},

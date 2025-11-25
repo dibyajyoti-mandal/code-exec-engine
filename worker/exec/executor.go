@@ -5,19 +5,16 @@ import (
 	"context"
 	"os/exec"
 	"time"
+
+	"github.com/dibyajyoti-mandal/code-exec-engine/constants"
+	"github.com/dibyajyoti-mandal/code-exec-engine/models"
 )
 
-type Result struct {
-	Stdout string `json:"stdout"`
-	Stderr string `json:"stderr"`
-	Error  string `json:"error"`
-}
-
-func RunInDocker(image string, code string) Result {
+func RunInDocker(image string, code string) models.Result {
 	var stdout, stderr bytes.Buffer
 
 	// timeout = 1 second
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), constants.CONTAINER_LIFE*time.Second)
 	defer cancel()
 
 	cmd := exec.CommandContext(
@@ -36,19 +33,22 @@ func RunInDocker(image string, code string) Result {
 
 	err := cmd.Run()
 
-	result := Result{
+	result := models.Result{
 		Stdout: stdout.String(),
 		Stderr: stderr.String(),
 	}
 
 	// timeout check
 	if ctx.Err() == context.DeadlineExceeded {
-		result.Error = "Time Limit Exceeded (1s)"
+		result.Error = "Time Limit Exceeded"
 		return result
 	}
 
-	if err != nil {
-		result.Error = err.Error()
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		if exitErr.ExitCode() == 124 {
+			result.Error = "Time Limit Exceeded"
+			return result
+		}
 	}
 
 	return result
