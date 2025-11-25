@@ -49,7 +49,7 @@ func workerLoop(workerID int) {
 			}(job)
 
 		default:
-			time.Sleep(150 * time.Millisecond)
+			time.Sleep(constants.SLEEPTIME * time.Millisecond)
 		}
 	}
 }
@@ -77,7 +77,7 @@ func main() {
 	EnqueueTestJobs()
 
 	// Spawn workers
-	for i := 1; i <= 3; i++ {
+	for i := 1; i <= constants.WORKER_COUNT; i++ {
 		go workerLoop(i)
 	}
 
