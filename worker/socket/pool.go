@@ -42,7 +42,7 @@ func (c *ClientMap) SendResult(clientID string, result models.Result) {
 	conn.WriteJSON(result)
 }
 
-// Send to EVERYONE connected
+// Send to everyone connected
 func (c *ClientMap) Broadcast(result models.Result) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()

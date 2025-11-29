@@ -45,7 +45,7 @@ func RunInDocker(image string, code string) models.Result {
 	}
 
 	if exitErr, ok := err.(*exec.ExitError); ok {
-		if exitErr.ExitCode() == 124 {
+		if exitErr.ExitCode() == constants.TLE {
 			result.Error = "Time Limit Exceeded"
 			return result
 		}
@@ -53,3 +53,5 @@ func RunInDocker(image string, code string) models.Result {
 
 	return result
 }
+
+// to add - logic for MLE, RTE and CE
