@@ -60,6 +60,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var payload struct {
+		ClientID string `json:"client_id"`
 		Language string `json:"language"`
 		Code     string `json:"code"`
 	}
@@ -72,6 +73,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 	job := models.Job{
 		ID:        uuid.NewString(),
+		ClientID:  payload.ClientID,
 		Language:  payload.Language,
 		Code:      payload.Code,
 		Timestamp: time.Now().Unix(),

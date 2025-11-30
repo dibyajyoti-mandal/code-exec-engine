@@ -44,3 +44,8 @@ func (r *RedisPublisher) Publish(job models.Job) error {
 func (r *RedisPublisher) Client() *redis.Client {
 	return r.client
 }
+
+/*run redis container : docker run -d --name redis -p 6379:6379 -v redis-data:/data redis:7-alpine
+enter cli : docker exec -it redis redis-cli
+check streams : XREAD COUNT 1 STREAMS code-jobs 0
+*/
