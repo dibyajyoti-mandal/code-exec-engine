@@ -23,7 +23,12 @@ var (
 )
 
 func main() {
+
+	//initalize redis conn
+	InitRedis()
+
 	//fire workers
+
 	for i := 1; i <= constants.WORKER_COUNT; i++ {
 		go workerLoop(i)
 	}

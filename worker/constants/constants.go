@@ -1,9 +1,14 @@
 package constants
 
-const IMAGE_LIMIT = 2
-const JQCHANNEL = 10
-const CONTAINER_LIFE = 5
-const SLEEPTIME = 150
-const WORKER_COUNT = 3
-const SERVER_PORT = ":8000"
-const TLE = 124
+const (
+	STREAM_KEY     = "code-jobs"
+	GROUP_NAME     = "worker_group"
+	CONSUMER       = "worker_1"
+	IMAGE_LIMIT    = 2
+	JQCHANNEL      = 10
+	CONTAINER_LIFE = 5
+	SLEEPTIME      = 150
+	WORKER_COUNT   = 3
+	SERVER_PORT    = ":8000"
+	TLE            = 124
+)
