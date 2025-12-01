@@ -34,7 +34,7 @@ func main() {
 	}
 	go resultBroadcaster()
 
-	go EnqueueTestJobs()
+	go StartRedisConsumer()
 
 	http.HandleFunc("/ws", handleWebSocket)
 
@@ -83,7 +83,7 @@ func workerLoop(workerID int) {
 
 		mu.Lock()
 		active++
-		fmt.Printf("[Worker %d] Jobs Active: %d\n", workerID, active)
+		// fmt.Printf("[Worker %d] Jobs Active: %d\n", workerID, active)
 		mu.Unlock()
 
 		go func(j models.Job) {
