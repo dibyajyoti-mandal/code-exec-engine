@@ -1,16 +1,16 @@
 import React, { useRef, useState } from "react";
 import Editor from "@monaco-editor/react";
+import axios from "axios";
 
 const defaultCode = {
-  javascript: `// JavaScript demo
-console.log('Hello from Monaco!');`,
+  javascript: `console.log('Hello from Monaco!');`,
 
-  typescript: `// TypeScript demo
-const greet = (name) => "Hello " + name;
+  typescript:
+    `const greet = (name) => "Hello " + name;
 console.log(greet("World"));`,
 
-  python: `# Python demo (cannot run in browser)
-print("Hello from Python")`,
+  python:
+    `print("Hello from Python")`,
 
   cpp: `#include <iostream>
 using namespace std;
@@ -42,51 +42,31 @@ export default function App() {
     setCode(defaultCode[lang] || "");
   };
 
-  const runInBrowser = () => {
-    if (language !== "javascript") {
-      setOutput("Browser-run demo works only for JavaScript.");
-      return;
-    }
-
-    const codeValue = editorRef.current?.getValue() || code;
-
-    const logs = [];
-    const originalLog = console.log;
-
-    console.log = (...args) => logs.push(args.join(" "));
-
-    try {
-      eval(codeValue);
-    } catch (err) {
-      logs.push("Error: " + err.toString());
-    }
-
-    console.log = originalLog;
-    setOutput(logs.join("\n"));
-  };
-
   const submitToServer = async () => {
     const payload = {
+      client_id: "BROADCAST",
       language,
       code: editorRef.current?.getValue() || code,
-      problemId: "demo-1",
+      problemId: "demo-1"
     };
+
+    console.log("Submitted code:", payload.code);
 
     setOutput("Submitting...");
 
     try {
-      const res = await fetch("/api/submit", {
+      const res = await fetch("http://localhost:8080/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
       const data = await res.json();
       setOutput("Server response: \n" + JSON.stringify(data, null, 2));
     } catch (err) {
       setOutput("Error submitting: " + err.toString());
     }
   };
+
 
   return (
     <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
@@ -110,7 +90,6 @@ export default function App() {
             <option value="java">Java</option>
           </select>
 
-          <button onClick={runInBrowser}>Run Code</button>
           <button onClick={submitToServer}>Submit Code</button>
         </div>
       </div>
