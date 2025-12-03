@@ -15,14 +15,30 @@ import (
 
 var publisher queue.Publisher
 
+func enableCORS(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", constants.FRONTEND)
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		// Handle "Preflight" OPTIONS request
+		// Browsers send an OPTIONS request before a POST to check permissions
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next(w, r)
+	}
+}
+
 func main() {
 	// choose queue backend
 	publisher = queue.NewRedisPublisher(constants.REDIS_ADDR)
-	// publisher = queue.NewRabbitPublisher("amqp://guest:guest@localhost:5672/")
 
-	http.HandleFunc("/health/redis", handleRedisHealth)
+	http.HandleFunc("/health/redis", enableCORS(handleRedisHealth))
 
-	http.HandleFunc("/submit", handleSubmit)
+	http.HandleFunc("/submit", enableCORS(handleSubmit))
 
 	log.Println("Gateway server running on", constants.SERVER_PORT)
 	log.Fatal(http.ListenAndServe(constants.SERVER_PORT, nil))
