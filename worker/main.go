@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json" // Added back for pretty printing
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
