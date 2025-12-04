@@ -21,8 +21,6 @@ func enableCORS(next http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		// Handle "Preflight" OPTIONS request
-		// Browsers send an OPTIONS request before a POST to check permissions
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
