@@ -2,7 +2,7 @@
 
 A distributed system for executing user-submitted code in isolated environments with real-time feedback. Designed for competitive programming contests and online judge platforms.
 
-[Design Documentation](https://github.com/dibyajyoti-mandal/code-exec-engine)
+[Design Documentation](https://docs.google.com/document/d/1G7xAqCehIAniPbZTdR818JRDodTZ34okQtb-fDW9dhs/edit?usp=sharing)
 
 ## System Architecture
 
@@ -99,39 +99,101 @@ Concurrency is handled through a **Fan-Out / Fan-In pattern** using Goroutines a
 - `workerLimiter`: Limits the number of jobs each worker can execute concurrently.
 - `resultQueue`: Acts as the output buffer. Workers write results here, and the `resultBroadcaster` reads them.
 
-## Future Improvements for Production
+## System Requirements
 
-### Database Integration
-- Store execution results for users
-- Set up systems to check against given test cases
-- The current version solely focuses on isolated and safe execution of submitted code
+### Software Dependencies
 
-### Object Storage
-- Source code and test cases cannot be stored in databases or passed as payload
-- Use object storage like AWS S3 or MinIO for code files and test cases
-- Suitable for scenarios of competitive programming contests
+- **Go**: Version 1.24.5 or higher
+  - Required for running the Gateway Server and Worker services
+  - Install from [golang.org](https://golang.org/dl/)
 
-### Advanced Message Queue
-- Migrate to RabbitMQ or Kafka for topic-based routing of jobs
-- Route code jobs based on language/difficulty of question to workers with different configurations
-- Redis Streams don't offer this feature
+- **Node.js**: Version 18.x or higher
+  - Required for the React frontend
+  - npm is used for package management
+  - Install from [nodejs.org](https://nodejs.org/)
 
-### Enhanced Security with gVisor
-- Use Google gVisor as a secure sandbox for Docker containers
-- Intercepts application system calls and runs them in a user-space kernel
-- Provides a strong defense-in-depth layer for Docker containers without changing the entire infrastructure
+- **Docker**: Latest stable version
+  - Required for code execution in isolated containers
+  - Docker daemon must be running
+  - Install from [docker.com](https://www.docker.com/get-started)
 
-### Auto-Scaling with Kubernetes
-- Workers are currently a static set of Go processes that require manual scaling
-- Containerize the Worker service itself and deploy it on Kubernetes (K8s)
-- Use Horizontal Pod Autoscaler (HPA) for auto-scaling based on the number of pending jobs in the message queue
+- **Redis**: Version 6.x or higher
+  - Used as the message queue (Redis Streams)
+  - Can be run via Docker or installed locally
+  - Install from [redis.io](https://redis.io/download)
+
+### Hardware Recommendations
+
+**Minimum Requirements**:
+- CPU: 2 cores
+- RAM: 4 GB
+- Storage: 10 GB free space
+
+**Recommended for Production**:
+- CPU: 8+ cores (for handling concurrent code executions)
+- RAM: 16+ GB (to support multiple Docker containers)
+- Storage: 50+ GB SSD
+- Network: Low-latency connection for Redis and WebSocket communication
+
+### Operating System
+
+- **Linux**: Recommended (Ubuntu 20.04+, Debian 11+, or similar)
+- **macOS**: Supported (with Docker Desktop)
+- **Windows**: Supported (with Docker Desktop and WSL2)
+
+### Port Requirements
+
+Ensure the following ports are available:
+- `3000`: React frontend (Vite dev server)
+- `8080`: Gateway Server
+- `8081`: Worker WebSocket server
+- `6379`: Redis (default port)
 
 ## Getting Started
+
+### Prerequisites Setup
+
+1. **Start Redis**:
+```bash
+# Using Docker (recommended)
+docker run -d --name redis -p 6379:6379 redis:latest
+
+# Or start existing container
+docker start redis
+```
+
+2. **Install Go dependencies**:
+```bash
+# Gateway Server
+cd gateway_server
+go mod download
+cd ..
+
+# Worker
+cd worker
+go mod download
+cd ..
+```
+
+3. **Install Node.js dependencies**:
+```bash
+npm install
+```
+
+### Running the System
 
 ```bash
 # Run the entire system
 ./run.sh
 ```
+
+This script will:
+1. Start Redis (if not already running)
+2. Launch the Gateway Server on port 8080
+3. Launch the Worker service with WebSocket on port 8081
+4. Start the React frontend on port 3000
+
+Access the application at `http://localhost:3000`
 
 ## License
 
