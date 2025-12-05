@@ -117,37 +117,6 @@ Concurrency is handled through a **Fan-Out / Fan-In pattern** using Goroutines a
   - Docker daemon must be running
   - Install from [docker.com](https://www.docker.com/get-started)
 
-- **Redis**: Version 6.x or higher
-  - Used as the message queue (Redis Streams)
-  - Can be run via Docker or installed locally
-  - Install from [redis.io](https://redis.io/download)
-
-### Hardware Recommendations
-
-**Minimum Requirements**:
-- CPU: 2 cores
-- RAM: 4 GB
-- Storage: 10 GB free space
-
-**Recommended for Production**:
-- CPU: 8+ cores (for handling concurrent code executions)
-- RAM: 16+ GB (to support multiple Docker containers)
-- Storage: 50+ GB SSD
-- Network: Low-latency connection for Redis and WebSocket communication
-
-### Operating System
-
-- **Linux**: Recommended (Ubuntu 20.04+, Debian 11+, or similar)
-- **macOS**: Supported (with Docker Desktop)
-- **Windows**: Supported (with Docker Desktop and WSL2)
-
-### Port Requirements
-
-Ensure the following ports are available:
-- `3000`: React frontend (Vite dev server)
-- `8080`: Gateway Server
-- `8081`: Worker WebSocket server
-- `6379`: Redis (default port)
 
 ## Getting Started
 
