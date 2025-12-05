@@ -83,7 +83,6 @@ func workerLoop(workerID int) {
 
 		mu.Lock()
 		active++
-		// fmt.Printf("[Worker %d] Jobs Active: %d\n", workerID, active)
 		mu.Unlock()
 
 		go func(j models.Job) {
