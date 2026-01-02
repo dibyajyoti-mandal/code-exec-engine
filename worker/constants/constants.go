@@ -11,4 +11,8 @@ const (
 	WORKER_COUNT   = 3
 	SERVER_PORT    = ":8000"
 	TLE            = 124
+	S3Bucket       = "code-exec-testcases"
+	S3Input        = "testcases/input.txt"
+	S3Output       = "testcases/output.txt"
+	S3DoneKey      = "testcases/done.txt"
 )

@@ -1,11 +1,15 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"sync"
 
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/dibyajyoti-mandal/code-exec-engine/constants"
 	executor "github.com/dibyajyoti-mandal/code-exec-engine/exec"
 	"github.com/dibyajyoti-mandal/code-exec-engine/models"
@@ -42,6 +46,26 @@ func main() {
 	if err := http.ListenAndServe(constants.SERVER_PORT, nil); err != nil {
 		panic(err)
 	}
+}
+
+func DownloadTestcase(client *s3.Client, bucket, key, localPath string) error {
+	out, err := client.GetObject(context.TODO(), &s3.GetObjectInput{
+		Bucket: &bucket,
+		Key:    &key,
+	})
+	if err != nil {
+		return err
+	}
+	defer out.Body.Close()
+
+	f, err := os.Create(localPath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, out.Body)
+	return err
 }
 
 func handleWebSocket(w http.ResponseWriter, r *http.Request) {
@@ -121,7 +145,7 @@ func runJobLogic(workerID int, job models.Job) models.Result {
 			Error: "Unsupported Language",
 		}
 	}
-
+	_ = executor.MarkProblemDone()
 	executionResult := executor.RunInDocker(image, job.Code)
 
 	executionResult.JobID = job.ID
@@ -151,3 +175,5 @@ func resultBroadcaster() {
 		}
 	}
 }
+
+// run: "docker build -t <Image name> ." for each language
